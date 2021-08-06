@@ -1,30 +1,38 @@
 ﻿
-using System;
 using UnityEngine;
 
 public class FoodSpawner : MonoBehaviour
 {
-    [SerializeField] Food foodPrefab;
-    [SerializeField] float boundX, boundY;
+    [SerializeField] GameObject foodPrefab;
+    [SerializeField] GameObject powerUpPrefab;
+    BoxCollider2D gridArea;
+    [SerializeField] Player player;
+    GameObject food;
     // Start is called before the first frame update
     void Start()
     {
-        SpawnFood();  
+        gridArea = GetComponent<BoxCollider2D>();
+        food = Spawn(foodPrefab);
+        GameObject powerUp = Spawn(powerUpPrefab);
     }
 
-    public void SpawnFood()
-    {
-        Vector3 position = new Vector3();
-        position.x = Mathf.Round(UnityEngine.Random.Range(-boundX,boundX-1));
-        position.y = Mathf.Round(UnityEngine.Random.Range(-boundY, boundY-1));
-        position.z = 0;
-        Food food = Instantiate(foodPrefab,position,Quaternion.identity);
-        food.foodSpawner = this;
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        
+        if(food==null)
+            food = Spawn(foodPrefab);
     }
+
+    public GameObject Spawn(GameObject prefab)
+    {
+        Vector3 position = Vector3.zero;
+        do {
+            Bounds bounds = gridArea.bounds;
+            position.x = Mathf.Round(Random.Range(bounds.min.x, bounds.max.x));
+            position.y = Mathf.Round(Random.Range(bounds.min.y, bounds.max.y));
+            position.z = 0;
+        } while (player.SnakeAtPos(position));
+        GameObject spawnedItem = Instantiate(prefab,position,Quaternion.identity);
+        return spawnedItem;
+    }
+    
 }

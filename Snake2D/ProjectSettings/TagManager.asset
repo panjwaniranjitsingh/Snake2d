@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Obstacle
+  - Food
+  - PowerUp
+  - Shield
+  - ScoreBoost
   layers:
   - Default
   - TransparentFX
